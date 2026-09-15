@@ -20,11 +20,38 @@ import adminRoutes from "./routes/adminRoutes.js";
 
 const app = express();
 const PORT = process.env.PORT || 9999;
-const allowedOrigins = (process.env.CLIENT_URLS || process.env.CLIENT_URL || "http://localhost:5173,http://localhost:3000").split(",").map((value) => value.trim()).filter(Boolean);
+const defaultOrigins = [
+  "http://localhost:5173",
+  "http://localhost:3000",
+  "https://freelance-x-tawny.vercel.app"
+];
+const rawOrigins = (process.env.CLIENT_URLS || process.env.CLIENT_URL || "").split(",");
+const allowedOrigins = [
+  ...defaultOrigins,
+  ...rawOrigins.map((val) => val.trim().replace(/\/$/, "")).filter(Boolean)
+];
+
+const isAllowedOrigin = (origin) => {
+  if (!origin) return true;
+  const cleanOrigin = origin.replace(/\/$/, "");
+  if (allowedOrigins.includes(cleanOrigin)) return true;
+  if (cleanOrigin.endsWith(".vercel.app")) return true;
+  return false;
+};
+
 if (process.env.NODE_ENV === "production") app.set("trust proxy", 1);
 
 // Middleware
-app.use(cors({ origin: (origin, callback) => (!origin || allowedOrigins.includes(origin)) ? callback(null, true) : callback(new Error("CORS origin is not allowed")), credentials: true }));
+app.use(cors({
+  origin: (origin, callback) => {
+    if (isAllowedOrigin(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error("CORS origin is not allowed"));
+    }
+  },
+  credentials: true
+}));
 app.use(express.static("files"));
 app.use(cookieParser());
 app.use(express.urlencoded({ extended: true, limit: "1mb" }));
