@@ -2,7 +2,6 @@ import User from "../models/user.js";
 import Job from "../models/job.js";
 import Contract from "../models/contract.js";
 import Payment from "../models/payment.js";
-import Dispute from "../models/dispute.js";
 
 // 1. Get Platform Overview Stats
 const getOverviewStats = async (req, res) => {
@@ -15,7 +14,6 @@ const getOverviewStats = async (req, res) => {
             activeJobs,
             totalContracts,
             activeContracts,
-            openDisputes,
             payments
         ] = await Promise.all([
             User.countDocuments(),
@@ -25,7 +23,6 @@ const getOverviewStats = async (req, res) => {
             Job.countDocuments({ status: "open" }),
             Contract.countDocuments(),
             Contract.countDocuments({ status: "active" }),
-            Dispute.countDocuments({ status: "open" }),
             Payment.find({ status: { $in: ["successful", "released"] } })
         ]);
 
@@ -35,7 +32,6 @@ const getOverviewStats = async (req, res) => {
             users: { total: totalUsers, freelancers: totalFreelancers, clients: totalClients },
             jobs: { total: totalJobs, active: activeJobs },
             contracts: { total: totalContracts, active: activeContracts },
-            disputes: { open: openDisputes },
             financials: { totalVolume }
         });
     } catch (error) {

@@ -15,7 +15,6 @@ import paymentRoutes from "./routes/paymentRoutes.js";
 import payoutRoutes from "./routes/payoutRoutes.js";
 import messagingRoutes from "./routes/messagingRoutes.js";
 import notificationRoutes from "./routes/notificationRoutes.js";
-import disputesRoutes from "./routes/disputesRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 
 const app = express();
@@ -73,7 +72,6 @@ app.use("/api/payments", paymentRoutes);
 app.use("/api/payouts", payoutRoutes);
 app.use("/api/messages", messagingRoutes);
 app.use("/api/notifications", notificationRoutes);
-app.use("/api/disputes", disputesRoutes);
 app.use("/api/admin", adminRoutes);
 
 // Root / Health check

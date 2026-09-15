@@ -46,7 +46,7 @@ const contractSchema = new Schema({
   },
   status: {
     type: String,
-    enum: ["active", "submitted", "revision_requested", "completed", "cancelled", "disputed"],
+    enum: ["active", "submitted", "revision_requested", "completed", "cancelled"],
     default: "active"
   },
   progress: {
