@@ -86,7 +86,9 @@ const submitWork = async (req, res) => {
         const workData = {
             description: description.trim(),
             stagingUrl: stagingUrl || null,
-            files: files || (req.files ? req.files.map(f => f.path) : []),
+            files: req.files && req.files.length > 0 
+              ? req.files.map(f => f.path || f.location || f.secure_url || f.url) 
+              : (Array.isArray(files) ? files : (files ? [files] : [])),
             submittedAt: new Date()
         };
 
@@ -136,7 +138,9 @@ const updateDelivery = async (req, res) => {
         const workData = {
             description: description.trim(),
             stagingUrl: stagingUrl || null,
-            files: files || (req.files ? req.files.map(f => f.path) : []),
+            files: req.files && req.files.length > 0 
+              ? req.files.map(f => f.path || f.location || f.secure_url || f.url) 
+              : (Array.isArray(files) ? files : (files ? [files] : [])),
             submittedAt: new Date(),
             updatedAt: new Date()
         };
